@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charser="UTF-8">
+        <title>Weather App</title>
+        <link rel="stylesheet" href="./style.css">
+        <link rel="stylesheet" href="./forecast.html">
+        <link rel="stylesheet" href="./main.js">
+        	<link rel="manifest" href="./manifest.json">
+
+
+        <link rel="apple-touch-icon" href="images/hello-icon-152.png">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="theme-color" content="white"/>
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="apple-mobile-web-app-title" content="Hello Weather">
+        <meta name="msapplication-TileImage" content="images/hello-icon-144.png">
+        <meta name="msapplication-TileColor" content="#FFFFFF">
+        
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <style>
+            @font-face{
+            font-family: anotherFont;
+            src: url(KGPayphone.ttf);
+        }
+            *{
+                font-family: anotherFont;
+            }
+            
+        #backBtn{
+                position:absolute;
+                top: 700px;
+                left: 75px;
+                background-color: white;
+                color: #fff !important;
+                text-transform: uppercase;
+                text-decoration: none;
+                background: #ed3330;
+                padding: 20px;
+                border-radius: 5px;
+                display: inline-block;
+                border: none;
+                transition: all 0.4s ease 0s;
+}
+      #capture{
+          position:absolute;
+          top: 300px;
+          left: 100px;  
+          background-color: white;
+          color: #fff !important;
+          text-transform: uppercase;
+          text-decoration: none;
+          background: #ed3330;
+          padding: 20px;
+          border-radius: 5px;
+          display: inline-block;
+          border: none;
+          transition: all 0.4s ease 0s;
+}
+            img{
+                
+            }
+     #canvas {
+         position: absolute;
+         left:0px;
+         top: 400px;
+}
+        
+        </style>
+    </head>
+    <body style="background-color:#ECC843">
+        <div class="bottom-block-wrapper h-centered">
+    <video id="player" width="320" height="240" controls autoplay></video>
+    <button id="capture" class="button">Capture</button>
+    <canvas id="canvas" width="320" height="240"></canvas>
+</div>
+
+<div id="imageOptions" class="bottom-block-wrapper h-centered">
+</div>
+    <div>
+            <button id="backBtn" class="button" onclick="window.location.href = 'index.html';">Back To Main</button>
+            </div>
+        
+
+
+
+
+<script
+    src="https://code.jquery.com/jquery-3.3.1.min.js" //integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous">
+</script>
+
+<script>
+
+  const images = [];
+  var activeImage = images[0];
+  var activeImageObject = new Image();
+
+  const player = document.getElementById('player');
+  const canvas = document.getElementById('canvas');
+  const context = canvas.getContext('2d');
+
+  const captureButton = document.getElementById('capture');
+ 
+  var requestBody;
+  const constraints = {
+    video: true,
+  };
+
+  // Attach the video stream to the video element and autoplay.
+  navigator.mediaDevices.getUserMedia(constraints)
+    .then((stream) => {
+      player.srcObject = stream;
+  });
+
+  // hook up event listener
+  captureButton.addEventListener('click', () => {
+
+  // Draw the video frame to the canvas.
+  context.drawImage(player, 0, 0, canvas.width, canvas.height);
+  
+  context.font = "20px Arial";
+  context.fillText("Nice you did it!",12,20);
+  });
+
+// structure request body based on Cloud Vision API docs
+// gets the image of the Data
+function getImageData(type) {
+ requestBody = {
+    "requests":[
+      {
+        "image":{
+          "content":canvas.toDataURL().split(",")[1]
+        },
+        "features":[
+          {
+            "type": type,
+            "maxResults":10
+          }
+        ]
+      }
+    ]
+  };
+}
+</script>
+<script src="main.js"></script>
+    <script src="sw.js"></script>
+</body>
+</html>
+
+        
+        

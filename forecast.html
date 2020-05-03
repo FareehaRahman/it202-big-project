@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charser="UTF-8">
+        <title>Weather App</title>
+        <link rel="stylesheet" href="./style.css">
+        <link rel="stylesheet" href="./forecast.html">
+        <link rel="stylesheet" href="./main.js">
+        	<link rel="manifest" href="./manifest.json">
+
+
+        <link rel="apple-touch-icon" href="images/hello-icon-152.png">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="theme-color" content="white"/>
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="apple-mobile-web-app-title" content="Hello Weather">
+        <meta name="msapplication-TileImage" content="images/hello-icon-144.png">
+        <meta name="msapplication-TileColor" content="#FFFFFF">
+        
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <style>
+         @font-face {
+            font-family: myFirstFont;
+            src: url(PORKH___.TTF);
+        }
+        @font-face{
+            font-family: anotherFont;
+            src: url(KGPayphone.ttf);
+        }
+            h{
+                font-family: anotherFont;
+            }
+            h1{
+                font-family: anotherFont;
+                size:20px;
+            }
+            #backBtn{
+               
+                background-color: white;
+                color: #fff !important;
+                text-transform: uppercase;
+                text-decoration: none;
+                background: #ed3330;
+                padding: 20px;
+                border-radius: 5px;
+                display: inline-block;
+                border: none;
+                transition: all 0.4s ease 0s;
+}
+            img{
+              width:150px;
+              height:150px;
+}
+            
+        
+        </style>
+    </head>
+    <body style="background-color:#55b2f7">
+
+        <div class="content" id="search">
+            <h> Current Forecast of where you live</h>
+            <h1> Tap On the C to Change to Fahrenheit</h1>
+           <br>
+           <div class="app-title">
+      </div>
+      <div class="notification"></div>
+      <div class="weather-container">
+        
+        <div class="location">
+          <p>.</p>
+        </div>
+        <div class="weather-icon">
+          <img src="icons8-ask-question-80.png" alt="">        </div>
+        <div class="temperature-value">
+          <p>- °<span>C</span>
+          </p>
+        </div>
+				<br>
+        <div class="temperature-description">
+          <p>-</p>
+        </div>
+          
+
+      </div>
+            <br>
+       <div>
+            <button id="backBtn" class="button" onclick="window.location.href = 'index.html';">Back To Main</button>
+            </div>
+    </div>
+       
+            
+        
+        
+        <!--JavaScript starts from down below -->
+
+ <script>
+        const iconElement = document.querySelector(".weather-icon");
+        const tempElement = document.querySelector(".temperature-value p");
+        const descElement = document.querySelector(".temperature-description p");
+        const locationElement = document.querySelector(".location p");
+        const notificationElement = document.querySelector(".notification");
+
+        // App data
+        const weather = {};
+
+        weather.temperature = {
+          unit : "celsius"
+        }
+        
+        const KELVIN = 273;
+        const key = "b7bf96a0d52a6ae2fb2d5d5f4159fe43";
+        
+        // Browser check got help from online
+        if('geolocation' in navigator){
+          navigator.geolocation.getCurrentPosition(setPosition, showError);
+          }
+        else{
+            notificationElement.style.display = "block";
+            notificationElement.innerHTML = "<p>Browser doesn't Support Geolocation</p>";
+     }
+     
+          // User's location
+        function setPosition(position){
+            let latitude = position.coords.latitude;
+            let longitude = position.coords.longitude;
+            getWeather(latitude, longitude);
+}
+      
+        // Geoloc error message if not working
+        function showError(error){
+            notificationElement.style.display = "block";
+            notificationElement.innerHTML = `<p> ${error.message} </p>`;
+}
+     // Retrieve weather api from: https://home.openweathermap.org/
+     // this website guided me through how to do this
+        function getWeather(latitude, longitude){
+            let api = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${key}`;
+    
+            fetch(api)
+                .then(function(response){
+                let data = response.json();
+                return data;
+        })
+            // easy to get the picture for the specfic description because I labeled the pics the array coordination
+                .then(function(data){
+                    weather.temperature.value = Math.floor(data.main.temp - KELVIN);
+                    weather.description = data.weather[0].description;
+                    weather.iconId = data.weather[0].icon;
+                    weather.city = data.name;
+                    weather.country = data.sys.country;
+        })
+                .then(function(){
+                    displayWeather();
+        });
+}
+     // Display information to User Interface
+       function displayWeather(){
+            iconElement.innerHTML = `<img src="weatherPics/${weather.iconId}.png"/>`;
+            tempElement.innerHTML = `${weather.temperature.value}°<span>C</span>`;
+            descElement.innerHTML = weather.description;
+            locationElement.innerHTML = `${weather.city}, ${weather.country}`;
+        }
+     // conversion got helped from stackOverflow....thought it would be fun to implement
+       // C to F conversion
+        function celsiusToFahrenheit(temperature){
+            return (temperature * 9/5) + 32;
+}
+     
+     // Switch conversions
+    tempElement.addEventListener("click", function(){
+        if(weather.temperature.value === undefined) return;
+    
+        if(weather.temperature.unit == "celsius"){
+            let fahrenheit = celsiusToFahrenheit(weather.temperature.value);
+            fahrenheit = Math.floor(fahrenheit);
+        
+            tempElement.innerHTML = `${fahrenheit}°<span>F</span>`;
+            weather.temperature.unit = "fahrenheit";
+    }    else{
+            tempElement.innerHTML = `${weather.temperature.value}°<span>C</span>`;
+            weather.temperature.unit = "celsius"
+    }
+});
+     
+        </script>
+        <script src="main.js"></script>
+    <script src="sw.js"></script>
+        
+    </body>
+</html>
+
+
+
