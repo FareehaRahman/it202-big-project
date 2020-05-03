@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charser="UTF-8">
-        <title>Weather App</title>
+        <title>Camera App</title>
         <link rel="stylesheet" href="./style.css">
         <link rel="stylesheet" href="./forecast.html">
         <link rel="stylesheet" href="./main.js">
@@ -73,7 +73,7 @@
     </head>
     <body style="background-color:#ECC843">
         <div class="bottom-block-wrapper h-centered">
-    <video id="player" width="320" height="240" controls autoplay></video>
+    <video id="person" width="320" height="240" controls autoplay></video>
     <button id="capture" class="button">Capture</button>
     <canvas id="canvas" width="320" height="240"></canvas>
 </div>
@@ -98,7 +98,7 @@
   var activeImage = images[0];
   var activeImageObject = new Image();
 
-  const player = document.getElementById('player');
+  const person = document.getElementById('person');
   const canvas = document.getElementById('canvas');
   const context = canvas.getContext('2d');
 
@@ -112,15 +112,16 @@
   // Attach the video stream to the video element and autoplay.
   navigator.mediaDevices.getUserMedia(constraints)
     .then((stream) => {
-      player.srcObject = stream;
+      person.srcObject = stream;
   });
 
-  // hook up event listener
+  // hook up event listener to the button capture
   captureButton.addEventListener('click', () => {
 
   // Draw the video frame to the canvas.
-  context.drawImage(player, 0, 0, canvas.width, canvas.height);
+  context.drawImage(person, 0, 0, canvas.width, canvas.height);
   
+   // Draw nicely done on the captured photo
   context.font = "20px Arial";
   context.fillText("Nice you did it!",12,20);
   });
