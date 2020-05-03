@@ -79,6 +79,7 @@
         </ul>
       </div>
     </nav>
+      <!-- Makes the bio -->
       <div>
           
           <p>About Me!</p>
@@ -92,14 +93,14 @@
    
 
 
-    <!-- GOOLGE MAPS MARKER -->
+    <!-- GOOLGE MAPS Part -->
 
     <div class="content" id="googlemaps">
       <h4>Current Location</h4>
-      <!--The div element for the map -->
       <div id="map"></div>
 
-
+        
+<!-- JAVASCIPT STARTS HERE -->
       <script>
         var map, infoWindow;
 
@@ -112,7 +113,7 @@
             zoom: 16
           });
           infoWindow = new google.maps.InfoWindow;
-          // HTML5 geolocation.
+            
           if(navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function(position) {
               var pos = {
@@ -158,7 +159,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
 
-
+<!-- Hides the map until location button hit-->
     <script>
       hideScreens();
 
